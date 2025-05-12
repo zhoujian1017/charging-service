@@ -1,0 +1,25 @@
+/**充电开始成功指令*/
+
+{
+  "orderNo":"10000_22_1721637187369",
+  "result":"start_success"
+}
+
+/**充电开始失败指令*/
+
+{
+  "orderNo":"10000_22_1721637187369",
+  "result":"start_fail"
+}
+
+/**充电进度指令*/
+    {
+    "orderNo":"10000_46_1721964589486",
+    "pileId":1 ,
+    "gunId":1,
+    "stationId" :5,
+    "chargingCapacity":10000,
+    "temperature":52,
+    "userId":1,
+    "isFull":false
+    }

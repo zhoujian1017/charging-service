@@ -1,0 +1,15 @@
+logging:
+  level:
+    cn.tedu: debug
+
+server:
+  port: 8081
+
+
+spring:
+  application:
+    name: userService
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+

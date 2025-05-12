@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.13</version>
+    </parent>
+
+    <groupId>cn.tedu</groupId>
+    <artifactId>charging-service</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>charging-order</module>
+        <module>charging-user</module>
+        <module>charging-common</module>
+        <module>charging-device</module>
+        <module>charging-gateway</module>
+    </modules>
+
+    <properties>
+        <nacos-version>2021.0.4.0</nacos-version>
+        <spring-boot-version>2.6.13</spring-boot-version>
+        <lombok-version>1.18.28</lombok-version>
+        <knife4j-version>4.0.0</knife4j-version>
+        <charging-common-version>1.0</charging-common-version>
+        <spring-cloud-version>3.1.5</spring-cloud-version>
+        <gateway-version>3.1.4</gateway-version>
+        <mqtt-version>1.2.5</mqtt-version>
+        <jackson-version>2.15.2</jackson-version>
+        <mybatis-plus-version>3.5.2</mybatis-plus-version>
+        <mysql-version>8.0.31</mysql-version>
+        <mybaits-version>2.3.1</mybaits-version>
+        <amqp-version>2.6.13</amqp-version>
+        <quartz-version>2.3.2</quartz-version>
+        <es-version>2.5.0</es-version>
+        <websocket-version>2.6.13</websocket-version>
+        <redis-version>2.6.13</redis-version>
+        <canal-version>1.2.1-RELEASE</canal-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+    <!--
+        在父项目里管理我们的依赖,和管理版本号 但是他不会依赖传递
+        在 dependencyManagement 里加的依赖,子项目不会直接继承
+        如果子模块想要使用,在子模块添加依赖,按需选择
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+                <version>${knife4j-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.tedu</groupId>
+                <artifactId>charging-common</artifactId>
+                <version>${charging-common-version}</version>
+            </dependency>
+            <!--服务注册和服务发现相关 nacos 依赖-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${nacos-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${spring-cloud-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>${spring-cloud-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${gateway-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.paho</groupId>
+                <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+                <version>${mqtt-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybaits-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+                <version>${amqp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+                <version>${es-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-websocket</artifactId>
+                <version>${websocket-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${redis-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.javatool</groupId>
+                <artifactId>canal-spring-boot-starter</artifactId>
+                <version>${canal-version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+
+
+
+
+</project>

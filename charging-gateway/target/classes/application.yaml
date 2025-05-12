@@ -1,0 +1,33 @@
+logging:
+  level:
+    cn.tedu: debug
+
+server:
+  port: 5050
+
+spring:
+  application:
+    name: gatewayService
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: order
+          uri: lb://orderService
+          predicates:
+            - Path=/order_api/**
+          filters:
+            - StripPrefix=1
+        - id: user
+          uri: lb://userService
+          predicates:
+            - Path=/user_api/**
+          filters:
+            - StripPrefix=1
+        - id: device
+          uri: lb://deviceService
+          predicates:
+            - Path=/device_api/**
+          filters:
+            - StripPrefix=1

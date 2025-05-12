@@ -1,0 +1,13 @@
+logging:
+  level:
+    cn.tedu: debug
+
+server:
+  port: 9091
+
+spring:
+  application:
+    name: deviceService
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
