@@ -83,4 +83,45 @@ public class RabbitMqTests {
         connection.close();
 
     }
+
+    //正确的测试用例，测试发布订阅模式
+    @Test
+    public void publishFanoutSuccess() throws Exception {
+        //代码书写流程：
+
+
+        //1. 创建连接工厂，创建连接，创建通道
+        ConnectionFactory factory = new ConnectionFactory();
+        Connection connection = factory.newConnection();
+        Channel channel = connection.createChannel();
+        //2. 声明变量，定义routingKey
+        String fanoutExchange = "hello_fanout_exchange";
+        String routingKey = "hello_fanout_routing_key";
+        String fanoutQueueName = "hello_fanout_queue";
+
+        //定义交换机
+        channel.exchangeDeclare(fanoutExchange, BuiltinExchangeType.FANOUT);
+
+        //3.声明队列，通过routingKey将queue和exchange绑定
+        for(int i=0;i<3;i++){
+            //通过channel定义queue
+            //fanout_queue_0  fanout_queue_1 fanout_queue_2
+            String tempQueueName = fanoutQueueName + "_" + i;
+            //fanout_routing_key_0 fanout_routing_key_1 fanout_routing_key_2
+            String tempRoutingKey = routingKey + "_" + i;
+            channel.queueDeclare(tempQueueName, false, false, false, null);
+            channel.queueBind(tempQueueName, fanoutExchange, tempRoutingKey);
+        }
+
+        //4. 发送消息
+        for (int i = 0; i < 8; i++) {
+            //定义消息
+            String message = "helloRabbit" + i;
+        }
+        //关闭通道
+        channel.close();
+        //关闭连接
+        connection.close();
+
+    }
 }
