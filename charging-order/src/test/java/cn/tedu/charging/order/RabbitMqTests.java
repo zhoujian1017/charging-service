@@ -113,10 +113,35 @@ public class RabbitMqTests {
             channel.queueBind(tempQueueName, fanoutExchange, tempRoutingKey);
         }
 
-        //4. 发送消息
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 6; i++) {
             //定义消息
             String message = "helloRabbit" + i;
+            //发送消息
+            //1 指定fanout类型的exchange，不指定routingKey，结果 和exchange绑定的queue,全部收到消息
+            //channel.basicPublish(fanoutExchange,"",null,message.getBytes());
+            //2 指定fanout类型的exchange，指定不属于当前Exchange的routingKey，结果和exchange绑定的queue,全部收到消息
+            //channel.basicPublish(fanoutExchange,"direct_routing_key",null,message.getBytes());
+            //3 指定fanout类型的exchange，指定属于当前Exchange的routingKey，结果 和exchange绑定的queue,全部收到消息
+            //channel.basicPublish(fanoutExchange,"hello_fanout_routing_key_0",null,message.getBytes());
+            //4 指定fanout类型的exchange，指定不存在routingKey，结果 和exchange绑定的queue,全部收到消息
+            //String notExistRoutingKey = "aadfsadfsdf";
+            //channel.basicPublish(fanoutExchange,notExistRoutingKey,null,message.getBytes());
+
+            //总结 必须指定存在的 fanout类型 exchange, routingKey 不传,传对,传错, 全发 ,忽略 routingKey
+
+            // 5 发送给不存在的 exchange  报异常 (reply-code=404, reply-text=NOT_FOUND - no exchange 'xxx' in vhost '/'
+            //try {
+            //    channel.basicPublish("xxx","xxx",null,message.getBytes());
+            //}catch (Exception e) {
+            //    e.printStackTrace();
+            //}
+            //6 发送 不指定 exchange 不指定  routingKey  消息丢失
+            try {
+                channel.basicPublish("","",null,message.getBytes());
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         //关闭通道
         channel.close();
