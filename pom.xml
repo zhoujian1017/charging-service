@@ -90,11 +90,13 @@
                 <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
                 <version>${nacos-version}</version>
             </dependency>
+<!--            Spring Cloud 生态中用于 声明式 HTTP 客户端 的核心组件，主要作用是 简化微服务之间的 HTTP 调用-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
                 <version>${spring-cloud-version}</version>
             </dependency>
+            <!--   Spring Cloud 生态中用于 客户端负载均衡         -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-loadbalancer</artifactId>

@@ -1,4 +1,4 @@
-package cn.tedu.charging.order.mapper;
+package cn.tedu.charging.order.dao.mapper;
 
 import cn.tedu.charging.order.pojo.po.ChargingBillFailPO;
 

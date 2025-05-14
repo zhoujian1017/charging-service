@@ -14,7 +14,10 @@ import cn.tedu.charging.order.pojo.dto.ChargingDto;
 import cn.tedu.charging.order.pojo.dto.StationInfoDto;
 import cn.tedu.charging.order.pojo.dto.UserInfoDto;
 import cn.tedu.charging.order.pojo.param.OrderAddParam;
+import cn.tedu.charging.order.pojo.po.OrderMQPO;
+import cn.tedu.charging.order.rabbitmq.RabbitMQOrderProducer;
 import cn.tedu.charging.order.service.OrderService;
+import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.springframework.beans.BeanUtils;
@@ -69,8 +72,27 @@ public class OrderServiceImpl implements OrderService {
         log.debug("给充电桩发送开始充电指令入参-orderNo:{},桩id:{},枪id:{}",orderNo,orderAddParam.getPileId(),orderAddParam.getGunId());
         startCharging(orderNo,orderAddParam.getPileId(),orderAddParam.getGunId());
         log.debug("成功给充电桩发送开始充电指令入参-orderNo:{},桩id:{},枪id:{}",orderNo,orderAddParam.getPileId(),orderAddParam.getGunId());
+        log.debug("发送消息给RabbitMQ,用来做延迟处理-订单号:{}",orderNo);
+        sendOrderMessage(orderNo);
+        log.debug("发送消息给RabbitMQ,用来做延迟处理-订单号:{},成功",orderNo);
+
         return orderNo;
     }
+
+    @Autowired
+    private RabbitMQOrderProducer rabbitMQOrderProducer;
+
+    /**
+     * 发送消息给RabbitMQ,用来做延迟处理
+     */
+    public void sendOrderMessage(String orderNo){
+        OrderMQPO orderMQPO = new OrderMQPO();
+        orderMQPO.setOrderNo(orderNo);
+        rabbitMQOrderProducer.sendOrder(orderMQPO);
+    }
+
+
+
 
     @Autowired
     private MqttProducer mqttProducer;

@@ -7,6 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class RabbitMqTests {
 
+
+    private String queueName = "hello_queue";
+
+    private String directExchange = "hello_direct_exchange";
+    private String directQueueName = "hello_direct_queue";
+
+
     @Test
     public void publishDirect() throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -148,5 +155,42 @@ public class RabbitMqTests {
         //关闭连接
         connection.close();
 
+    }
+
+    private static ConnectionFactory getConnectionFactory() {
+        //创建连接工厂,工厂模式,抽象工厂 设计模式的一种 用来创建生成对象
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        //设置连接地址
+        connectionFactory.setHost("localhost");
+        //设置端口号
+        connectionFactory.setPort(5672);
+        //设置用户名
+        connectionFactory.setUsername("guest");
+        //设置密码
+        connectionFactory.setPassword("guest");
+        //设置虚拟主机
+        connectionFactory.setVirtualHost("/");
+        return connectionFactory;
+    }
+
+    @Test
+    public void subscribe() throws Exception {
+        //获取连接工厂
+        ConnectionFactory connectionFactory = getConnectionFactory();
+        //创建连接
+        Connection connection = connectionFactory.newConnection();
+        //通过连接创建channel
+        Channel channel = connection.createChannel();
+        //定义回调类 语法糖
+       /* DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            byte[] body = delivery.getBody();
+            String message = new String(body);
+            System.out.println("消费消息" + message);
+        };*/
+
+
+        DeliverCallbackImpl deliverCallback  = new DeliverCallbackImpl();
+
+        channel.basicConsume(queueName,true,deliverCallback,consumerTag -> {});
     }
 }
