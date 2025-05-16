@@ -9,6 +9,7 @@ import cn.tedu.charging.order.constant.Constant;
 import cn.tedu.charging.order.constant.MqttConstant;
 import cn.tedu.charging.order.fegin.DeviceClient;
 import cn.tedu.charging.order.fegin.UserClient;
+import cn.tedu.charging.order.job.DeviceCheckJob;
 import cn.tedu.charging.order.mqtt.MqttProducer;
 import cn.tedu.charging.order.pojo.dto.ChargingDto;
 import cn.tedu.charging.order.pojo.dto.StationInfoDto;
@@ -67,6 +68,16 @@ public class OrderServiceImpl implements OrderService {
         //  5.2 不要 什么时候检查呢? 应该充电桩正常,能充电的时候,每次充电桩同步充电进度的时候检查 必须要做
         //  总结 用户余额检查 创建订单的时候可以检查, 每次同步充电进度的时候必须检查
 
+
+        //7 创建自检定时任务
+        log.debug("创建设备自检任务:入参:订单号{},枪id:{}",orderNo,orderAddParam.getGunId());
+        try {
+            DeviceCheckJob deviceCheckJob = new DeviceCheckJob(orderNo, orderAddParam.getGunId());
+        } catch (Exception e) {
+            //可以抛一个业务异常,全局异常处理器进行处理,告诉用户 订单创建失败
+            log.error("设备自检任务创建失败",e);
+        }
+        log.debug("创建设备自检任务成功:入参:订单号{},枪id:{}",orderNo,orderAddParam.getGunId());
 
         //6 给充电桩发送开始充电指令
         log.debug("给充电桩发送开始充电指令入参-orderNo:{},桩id:{},枪id:{}",orderNo,orderAddParam.getPileId(),orderAddParam.getGunId());

@@ -78,8 +78,26 @@ public class MqttConsumer implements MqttCallbackExtended {
                 chargingBillSuccessPO.setBillStatus(OrderStatusConstant.ORDER_STATUS_PROGRESS);
 
                 log.debug("保存成功订单记录:{}",chargingBillSuccessPO);
-                Integer row = mqttContext.getOrderSuccessMapper().insert(chargingBillSuccessPO);
-                log.debug("保存成功订单记录:{},完成,影响行数:{}",chargingBillSuccessPO,row);
+
+                //如果设备重复发送消息
+                //会导致 成功订单表 charging_bill_success 会重复的保存订单数据
+                //如何解决
+                //1 给订单表 订单编号 创建一个唯一索引,唯一索引的意思 这个表里不能有重复的订单编号
+                // 加完唯一索引后,如果有重复的记录要保存 数据库会抛出异常
+                // Duplicate entry '10000_58_1721720859912' for key 'charging_bill_success_bill_id_unique_key'
+                // 从而避免订单成功表有重复的订单记录
+                // 异常可以处理,可以不处理 通常接入监控系统  监控系统
+                // 如果固定的时间之内 重复发送消息,设备出问题了,通知调用方 设备维修人员
+                //2 先查询订单成功表是否有数据,如果没有 插入,如果有 跳过不保存,
+                // 代码怎么写? 原子性的问题  todo
+                //3 记录状态 如果处理过了,不再重复处理  redis的布隆过滤器 自己了解 todo
+                try{
+                    Integer row = mqttContext.getOrderSuccessMapper().insert(chargingBillSuccessPO);
+                    log.debug("保存成功订单记录:{},完成,影响行数:{}",chargingBillSuccessPO,row);
+                }catch (Exception e) {
+                    //接入监控系统
+                    log.error("保存成功订单数据失败",e);
+                }
             }else {
                 //不是成功,都是失败
                 log.debug("充电桩开始充电失败");
